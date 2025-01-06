@@ -18,6 +18,9 @@
 		"main": [
 			"dev.lemonnik.melodeon.Melodeon"
 		],
+		"client": [
+			"dev.lemonnik.melodeon.MelodeonClient",
+		],
 		"fabric-datagen": [
 			"dev.lemonnik.melodeon.MelodeonDataGenerator"
 		]
