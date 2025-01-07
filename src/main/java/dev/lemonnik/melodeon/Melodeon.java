@@ -12,5 +12,7 @@ public class Melodeon implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		LOGGER.info("Starting Melodeon!");
+		ResourcePackGenerator.generateResourcePack();
+		SoundRegisterer.registerSounds();
 	}
 }

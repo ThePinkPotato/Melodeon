@@ -5,18 +5,43 @@ import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
-public class SoundRegisterer{
-    public static final SoundEvent ENTER_PLAINS = registerSoundEvent("enter.biome.plains");
-    public static final SoundEvent AMBIENT_PLAINS = registerSoundEvent("ambient.biome.plains");
-    public static final SoundEvent LEAVE_PLAINS = registerSoundEvent("leave.biome.plains");
+import java.io.File;
 
+public class SoundRegisterer {
+    public static void registerSounds() {
+        File currentRunDir = new File(System.getProperty("user.dir"));
+        File soundsDir = new File(currentRunDir, "resourcepacks/Melodeon/assets/melodeon/sounds/");
 
-    private static SoundEvent registerSoundEvent(String name) {
-        Identifier id = new Identifier(Melodeon.MOD_ID, name);
-        return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
+        if (!soundsDir.exists()) {
+            if (soundsDir.mkdirs()) {
+                Melodeon.LOGGER.info("Created sounds directory: " + soundsDir.getAbsolutePath());
+            } else {
+                Melodeon.LOGGER.error("Failed to create sounds directory: " + soundsDir.getAbsolutePath());
+                return;
+            }
+        }
+
+        File[] soundFiles = soundsDir.listFiles();
+        if (soundFiles == null || soundFiles.length == 0) {
+            Melodeon.LOGGER.warn("No sound files found in: " + soundsDir.getAbsolutePath());
+            return;
+        }
+
+        for (File soundFile : soundFiles) {
+            if (soundFile.isFile() && (soundFile.getName().endsWith(".ogg"))) {
+                String soundName = soundFile.getName().substring(0, soundFile.getName().lastIndexOf('.'));
+                registerSoundEvent(soundName);
+            }
+        }
+
+        Melodeon.LOGGER.info("Registered all sounds from " + soundsDir.getAbsolutePath());
     }
 
-    public static void registerSounds() {
-        Melodeon.LOGGER.info("Registering Sounds for " + Melodeon.MOD_ID);
+    private static void registerSoundEvent(String name) {
+        Identifier id = new Identifier(Melodeon.MOD_ID, name);
+        SoundEvent soundEvent = SoundEvent.of(id);
+        Registry.register(Registries.SOUND_EVENT, id, soundEvent);
+
+        Melodeon.LOGGER.info("Registered sound: " + id);
     }
 }

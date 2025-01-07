@@ -5,11 +5,12 @@
 	"name": "Melodeon",
 	"description": "I'm a fun little description :D",
 	"authors": [
-		"mkmod generator"
+		"Lemonnik6484",
+		"Haxalotl"
 	],
 	"contact": {
-		"homepage": "https://github.com/snackbag/mkmod",
-		"sources": "https://github.com/snackbag/mkmod/blob/main/fabric"
+		"homepage": "https://github.com/ThePinkPotato/Melodeon",
+		"sources": "https://github.com/ThePinkPotato/Melodeon"
 	},
 	"license": "MIT",
 	"icon": "assets/melodeon/icon.png",
@@ -19,7 +20,7 @@
 			"dev.lemonnik.melodeon.Melodeon"
 		],
 		"client": [
-			"dev.lemonnik.melodeon.MelodeonClient",
+			"dev.lemonnik.melodeon.MelodeonClient"
 		],
 		"fabric-datagen": [
 			"dev.lemonnik.melodeon.MelodeonDataGenerator"
