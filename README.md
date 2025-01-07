@@ -15,6 +15,8 @@ This means that specific music will play depending on the biome or structure you
    
 3) That's it! You're ready to go, just dont forgot to restart your game!
 
+*This mod will also *eventually* have its own music packaged inside, but you will still be able to add your own music
+
 ## Roadmap
 - [ ] Biome music
 - [X] Auto sound registration
