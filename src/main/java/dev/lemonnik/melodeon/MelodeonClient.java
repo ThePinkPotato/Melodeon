@@ -30,13 +30,13 @@ public class MelodeonClient implements ClientModInitializer {
                 RegistryKey<Biome> newBiomeKey = biomeEntry.getKey().orElse(null);
                 String biomeModName = newBiomeKey.getValue().getNamespace();
 
-                if (newBiomeKey != null && !newBiomeKey.equals(currentBiomeKey)) {
+                if (!newBiomeKey.equals(currentBiomeKey)) {
                     if (currentBiomeKey != null) {
                         playBiomeSound("leave", currentBiomeKey, biomeModName);
                     }
                     playBiomeSound("enter", newBiomeKey, biomeModName);
                     currentBiomeKey = newBiomeKey;
-                } else if (newBiomeKey != null) {
+                } else {
                     playBiomeSound("ambient", newBiomeKey, biomeModName);
                 }
             }
