@@ -45,8 +45,8 @@ public class ResourcePackGenerator {
             }
         }
 
-        if (resourcePackDir.exists() && resourcePackDir.isDirectory()) {
-            File[] files = resourcePackDir.listFiles();
+        if (soundsDir.exists() && soundsDir.isDirectory()) {
+            File[] files = soundsDir.listFiles();
             if (files != null) {
                 for (File file : files) {
                     if (file.isFile()) {
