@@ -2,6 +2,7 @@ package dev.lemonnik.melodeon;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -24,6 +25,8 @@ public class MelodeonClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        CommandRegistrationCallback.EVENT.register(Commands::register);
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.world != null && client.player != null) {
                 RegistryEntry<Biome> biomeEntry = client.world.getBiome(client.player.getBlockPos());
