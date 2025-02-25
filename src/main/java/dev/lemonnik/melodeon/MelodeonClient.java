@@ -66,7 +66,7 @@ public class MelodeonClient implements ClientModInitializer {
             Vec3d pos = client.player.getPos();
             SoundInstance sound = new PositionedSoundInstance(
                     soundEvent.getId(),
-                    SoundCategory.AMBIENT,
+                    SoundCategory.MUSIC,
                     1.0F,
                     1.0F,
                     SoundInstance.createRandom(),
@@ -89,7 +89,7 @@ public class MelodeonClient implements ClientModInitializer {
             Vec3d pos = client.player.getPos();
             SoundInstance sound = new PositionedSoundInstance(
                     soundEvent.getId(),
-                    SoundCategory.AMBIENT,
+                    SoundCategory.MUSIC,
                     1.0F,
                     1.0F,
                     SoundInstance.createRandom(),
@@ -111,7 +111,7 @@ public class MelodeonClient implements ClientModInitializer {
         if (soundEvent != null) {
             currentAmbientSound = new PositionedSoundInstance(
                     soundEvent.getId(),
-                    SoundCategory.AMBIENT,
+                    SoundCategory.MUSIC,
                     1.0F,
                     1.0F,
                     SoundInstance.createRandom(),
