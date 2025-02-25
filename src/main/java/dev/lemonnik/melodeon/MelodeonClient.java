@@ -12,7 +12,6 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.biome.Biome;
 
 import org.slf4j.Logger;
@@ -26,6 +25,8 @@ public class MelodeonClient implements ClientModInitializer {
     private int tickCounter = 0;
     private Identifier lastBiomeId = null;
     private SoundInstance currentAmbientSound;
+    private SoundInstance currentEnterSound;
+    private boolean waitingForAmbient = false;
 
     @Override
     public void onInitializeClient() {
@@ -40,9 +41,11 @@ public class MelodeonClient implements ClientModInitializer {
             tickCounter = 0;
             RegistryEntry<Biome> biomeEntry = client.world.getBiome(client.player.getBlockPos());
             Identifier currentBiomeId = biomeEntry.getKey().map(RegistryKey::getValue).orElse(null);
-
             if (currentBiomeId != null && !currentBiomeId.equals(lastBiomeId)) {
                 handleBiomeChange(client, currentBiomeId);
+            }
+            if (currentBiomeId != null && waitingForAmbient && !client.getSoundManager().isPlaying(currentEnterSound) && !client.getSoundManager().isPlaying(currentAmbientSound)) {
+                playAmbientSound(client, currentBiomeId);
             }
         }
     }
@@ -54,7 +57,6 @@ public class MelodeonClient implements ClientModInitializer {
         }
 
         playEnterSound(client, newBiomeId);
-        playAmbientSound(client, newBiomeId);
 
         lastBiomeId = newBiomeId;
     }
@@ -63,7 +65,6 @@ public class MelodeonClient implements ClientModInitializer {
         Identifier soundId = new Identifier(MOD_ID, "leave." + biomeId.getNamespace() + "." + biomeId.getPath());
         SoundEvent soundEvent = getSoundEvent(client, soundId);
         if (soundEvent != null) {
-            Vec3d pos = client.player.getPos();
             SoundInstance sound = new PositionedSoundInstance(
                     soundEvent.getId(),
                     SoundCategory.MUSIC,
@@ -73,9 +74,9 @@ public class MelodeonClient implements ClientModInitializer {
                     false,
                     0,
                     SoundInstance.AttenuationType.LINEAR,
-                    pos.x,
-                    pos.y,
-                    pos.z,
+                    0.0,
+                    0.0,
+                    0.0,
                     false
             );
             client.getSoundManager().play(sound);
@@ -86,8 +87,7 @@ public class MelodeonClient implements ClientModInitializer {
         Identifier soundId = new Identifier(MOD_ID, "enter." + biomeId.getNamespace() + "." + biomeId.getPath());
         SoundEvent soundEvent = getSoundEvent(client, soundId);
         if (soundEvent != null) {
-            Vec3d pos = client.player.getPos();
-            SoundInstance sound = new PositionedSoundInstance(
+            currentEnterSound = new PositionedSoundInstance(
                     soundEvent.getId(),
                     SoundCategory.MUSIC,
                     1.0F,
@@ -96,12 +96,13 @@ public class MelodeonClient implements ClientModInitializer {
                     false,
                     0,
                     SoundInstance.AttenuationType.LINEAR,
-                    pos.x,
-                    pos.y,
-                    pos.z,
+                    0.0,
+                    0.0,
+                    0.0,
                     false
             );
-            client.getSoundManager().play(sound);
+            client.getSoundManager().play(currentEnterSound);
+            waitingForAmbient = true;
         }
     }
 
@@ -128,9 +129,12 @@ public class MelodeonClient implements ClientModInitializer {
     }
 
     private SoundEvent getSoundEvent(MinecraftClient client, Identifier soundId) {
-        return client.world.getRegistryManager()
-                .get(RegistryKeys.SOUND_EVENT)
-                .get(soundId);
+        if (client.world != null) {
+            return client.world.getRegistryManager()
+                    .get(RegistryKeys.SOUND_EVENT)
+                    .get(soundId);
+        }
+        return null;
     }
 
     private void stopCurrentAmbient(MinecraftClient client) {
